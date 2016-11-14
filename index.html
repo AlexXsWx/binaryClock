@@ -1,0 +1,149 @@
+<html>
+
+	<head>
+
+		<script type="text/javascript">
+
+			function addZero(value) {
+				if (value < 10)
+					value = "0" + value;
+				return value;
+			}
+
+			var outputSpan = null;
+
+			var secImg = null;
+			var minImg = null;
+			var amPm = null;
+			var hourImg = null;
+			var hourM = null;
+
+			var seconds = 0;
+			var minutes = 0;
+			var hours = 0;
+
+			var t = null;
+
+			function drawHours() {
+				if (parseInt(hours / 13)) amPm.visibility = "visible";
+				else amPm.visibility = "hidden";
+
+				var hour2 = hours % 12;
+				if (hour2 == 0) hour2 = 12;
+
+				hourImg[0].visibility = "hidden";
+				hourImg[1].visibility = "hidden";
+				hourImg[2].visibility = "hidden";
+				hourImg[(hour2 - 1) % 3].visibility = "visible";
+
+				hour2 = parseInt((hour2 - 1) / 3);
+				if (hour2 % 2) hourM[0].visibility = "visible";
+				else hourM[0].visibility = "hidden";
+				hour2 >>= 1;
+				if (hour2 % 2) hourM[1].visibility = "visible";
+				else hourM[1].visibility = "hidden";
+			}
+
+			function drawMinutes() {
+				var min2 = minutes;
+				for (var i = 0; i < 6; i++) {
+					if (min2 % 2) minImg[i].visibility = "visible";
+					else minImg[i].visibility = "hidden";
+					min2 >>= 1;
+				}	
+			}
+
+			function drawSeconds() {
+				var sec2 = seconds;
+				for (var i = 0; i < 6; i++) {
+					if (sec2 % 2) secImg[i].visibility = "visible";
+					else secImg[i].visibility = "hidden";
+					sec2 >>= 1;
+				}
+			}
+
+			function initAndStartClock() {
+
+				amPm = document.getElementById("am-pm").style;
+				hourImg = new Array(document.getElementById("hours1of3").style,
+						    document.getElementById("hours2of3").style,
+						    document.getElementById("hours3of3").style );
+				hourM = new Array(  document.getElementById("hours-bit1").style,
+						    document.getElementById("hours-bit2").style );
+
+				minImg = new Array( document.getElementById("minutes-bit1").style,
+						    document.getElementById("minutes-bit2").style,
+						    document.getElementById("minutes-bit3").style,
+						    document.getElementById("minutes-bit4").style,
+						    document.getElementById("minutes-bit5").style,
+						    document.getElementById("minutes-bit6").style );
+
+				secImg = new Array( document.getElementById("seconds-bit1").style,
+						    document.getElementById("seconds-bit2").style,
+						    document.getElementById("seconds-bit3").style,
+						    document.getElementById("seconds-bit4").style,
+						    document.getElementById("seconds-bit5").style,
+						    document.getElementById("seconds-bit6").style );
+
+				t = new Date();
+				hours = t.getHours();
+				minutes = t.getMinutes();
+				seconds = t.getSeconds();
+
+				while (hours < 1) hours += 24;
+				while (hours > 24) hours -= 24;
+				drawHours();
+				drawMinutes();
+				drawSeconds();
+
+				outputSpan = document.getElementById("someSpan");
+				outputSpan.innerHTML = addZero(hours) + " : " + addZero(minutes) + " : " + addZero(seconds);
+
+				setInterval(updateClock, 1000);
+			}
+
+
+			function updateClock() {
+				seconds++;
+				if (seconds > 59) {
+					t = new Date();
+					hours = t.getHours();
+					minutes = t.getMinutes();
+					seconds = t.getSeconds();
+					while (hours < 1) hours += 24;
+					while (hours > 24) hours -= 24;
+					drawHours();
+					drawMinutes();
+				}
+				drawSeconds();
+				outputSpan.innerHTML = addZero(hours) + " : " + addZero(minutes) + " : " + addZero(seconds);
+			}
+		</script>
+		
+	</head>
+
+	<body onload = "initAndStartClock();" style = "color:#ffffff" bgcolor = "#000000">
+		<img style="position:absolute; visibility:visible" src="bg.png"/>
+		<img style="position:absolute; visibility:hidden" src="hours-bit1.png" id="hours-bit1"/>
+		<img style="position:absolute; visibility:hidden" src="hours-bit2.png" id="hours-bit2"/>
+		<img style="position:absolute; visibility:hidden" src="hours1of3.png" id="hours1of3"/>
+		<img style="position:absolute; visibility:hidden" src="hours2of3.png" id="hours2of3"/>
+		<img style="position:absolute; visibility:hidden" src="hours3of3.png" id="hours3of3"/>
+		<img style="position:absolute; visibility:hidden" src="minutes-bit1.png" id="minutes-bit1"/>
+		<img style="position:absolute; visibility:hidden" src="minutes-bit2.png" id="minutes-bit2"/>
+		<img style="position:absolute; visibility:hidden" src="minutes-bit3.png" id="minutes-bit3"/>
+		<img style="position:absolute; visibility:hidden" src="minutes-bit4.png" id="minutes-bit4"/>
+		<img style="position:absolute; visibility:hidden" src="minutes-bit5.png" id="minutes-bit5"/>
+		<img style="position:absolute; visibility:hidden" src="minutes-bit6.png" id="minutes-bit6"/>
+		<img style="position:absolute; visibility:hidden" src="seconds-bit1.png" id="seconds-bit1"/>
+		<img style="position:absolute; visibility:hidden" src="seconds-bit2.png" id="seconds-bit2"/>
+		<img style="position:absolute; visibility:hidden" src="seconds-bit3.png" id="seconds-bit3"/>
+		<img style="position:absolute; visibility:hidden" src="seconds-bit4.png" id="seconds-bit4"/>
+		<img style="position:absolute; visibility:hidden" src="seconds-bit5.png" id="seconds-bit5"/>
+		<img style="position:absolute; visibility:hidden" src="seconds-bit6.png" id="seconds-bit6"/>
+		<img style="position:absolute; visibility:hidden" src="am-pm.png" id="am-pm"/>
+		<span id="someSpan"></span>
+
+	</body>
+
+</html>
